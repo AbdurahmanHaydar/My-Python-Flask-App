@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+	<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+	<script >
+	/*submit the data to the Flask webserver using ajax`s XHR. */
+			$(document).ready(function() {
+					$('form').on('submit', function(event) {
+						$.ajax({
+							data : {  
+								email : $('#emailInput').val(),
+								subject: $('#subjectInput').val(),
+								body : $('#bodyInput').val()
+							},
+							type : 'POST',
+							url : '/process'
+						})
+						.done(function(data) {
+							if (data.error) {
+								$('#errorAlert').text(data.error).show();
+								$('#successAlert').hide();
+								if(!navigator.onLine){
+									$('#offLineAlert').text('Please check your network connection').show();
+								}else{
+									$('#offLineAlert').hide();
+								}
+							}
+							else{
+								if(!navigator.onLine){
+									$('#offLineAlert').text('Please check your network connection').show();
+								}else{
+									$('#successAlert').text(data.success).show();
+									$('#errorAlert').hide();
+									$('#offLineAlert').hide();
+								}
+							}
+						});
+						event.preventDefault();
+					});
+				});
+	</script>
+</head>
+<body>
+<div class="container">
+<center>
+	<br><br><br><br>
+	<form class="form-inline">
+	  <div class="form-group">
+	    <label class="sr-only" for="emailInput">Email address</label>
+	    <input type="email" name="email" class="form-control" id="emailInput" style="width: 600px; height:40px;" placeholder="To">
+	  </div><br>
+	  <div class="form-group">
+	    <label class="sr-only" for="nameInput">Subject</label>
+	    <input type="text" class="form-control" id="subjectInput" style="width: 600px; height:40px;" placeholder="Subject">
+	  </div><br>
+	  <div class="form-group">
+	    <label class="sr-only" for="nameInput">email body</label>
+		<textarea type="text" class="form-control" style="width: 600px; height:150px;" id="bodyInput" placeholder="body"></textarea><br>
+	  </div><br><br>
+	  <button type="submit" class="btn btn-default">Send</button>
+	</form>
+	<br>
+	<!--alert messages-->
+	<div id="successAlert" class="alert alert-success" role="alert"  style="width: 600px;display:none;"></div>
+	<div id="errorAlert" class="alert alert-danger" role="alert" style="width: 600px;display:none;"></div>
+	<div id="offLineAlert" class="alert alert-warning" role="alert" style="width: 600px;display:none;"></div>
+</center>
+</div>
+</body>
+</html>
