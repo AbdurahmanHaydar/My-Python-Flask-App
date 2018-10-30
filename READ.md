@@ -1,7 +1,0 @@
-setup and commands used :
-  1)sudo service rabbitmq-server restart                           //rabbit mq in ubuntu bash
-  2) celery -A web.celery worker --loglevel=info                   //in seperate terminal
-  3)python web.py                                                  // in seperate terminal
-
-then go to   localhost:5000 in browser.
-
